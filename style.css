@@ -46,3 +46,67 @@ footer{
     padding:20px;
     background:#111827;
 }
+/* ================= CONTACT - PROFESSIONAL ================= */
+
+#contact {
+    text-align: center;
+}
+
+.contact-box {
+    text-align: center;
+    padding: 25px;
+}
+
+.contact-box p {
+    color: #ffffff;
+    font-size: 17px;
+    font-weight: 700;
+    margin-top: 22px;
+    margin-bottom: 6px;
+}
+
+/* Email & Phone */
+.contact-box > a {
+    display: inline-block;
+    color: #ffffff;
+    background: rgba(255, 255, 255, 0.08);
+    border: 1px solid rgba(255, 255, 255, 0.18);
+    padding: 10px 16px;
+    border-radius: 8px;
+    text-decoration: none;
+    font-weight: 600;
+    transition: 0.3s;
+}
+
+.contact-box > a:hover {
+    background: rgba(255, 255, 255, 0.15);
+    border-color: #ffffff;
+    transform: translateY(-2px);
+}
+
+/* Contact buttons */
+.contact-buttons {
+    margin-top: 28px;
+    display: flex;
+    justify-content: center;
+    gap: 15px;
+    flex-wrap: wrap;
+}
+
+.contact-btn {
+    display: inline-block;
+    color: #ffffff !important;
+    background: transparent;
+    border: 1px solid #ffffff;
+    padding: 11px 22px;
+    border-radius: 8px;
+    text-decoration: none !important;
+    font-weight: 700;
+    transition: 0.3s;
+}
+
+.contact-btn:hover {
+    background: #ffffff;
+    color: #111827 !important;
+    transform: translateY(-2px);
+}
