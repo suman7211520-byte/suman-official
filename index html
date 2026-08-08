@@ -1,0 +1,160 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Suman Official</title>
+
+    <link rel="stylesheet" href="style.css">
+
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;600;700&display=swap" rel="stylesheet">
+</head>
+
+<body>
+
+<header>
+    <div class="logo">
+        <h2>Suman Official</h2>
+    </div>
+
+    <nav>
+        <a href="#home">Home</a>
+        <a href="#about">About</a>
+        <a href="#services">Services</a>
+        <a href="#projects">Projects</a>
+        <a href="#contact">Contact</a>
+    </nav>
+
+    <button id="darkModeBtn">🌙</button>
+</header>
+
+<section id="home" class="hero">
+
+    <h1>Hello, I'm</h1>
+
+    <h2>Suman Samanta</h2>
+
+    <h3 id="typing"></h3>
+
+    <p>
+        Welcome to my official website.
+    </p>
+
+    <div class="buttons">
+
+        <a href="#about" class="btn">
+            About Me
+        </a>
+
+        <a href="#contact" class="btn">
+            Contact Me
+        </a>
+
+    </div>
+
+</section>
+
+<section id="about">
+
+    <h2>About Me</h2>
+
+    <p>
+
+Hi! My name is <b>Suman Samanta</b>.
+
+I am a Student and Freelancer.
+
+I provide Data Entry, Typing,
+MS Word, MS Excel and Online Support services.
+
+I also love learning technology,
+web development and AI.
+
+    </p>
+
+</section>
+
+<section id="services">
+
+<h2>My Services</h2>
+
+<div class="card">
+
+<h3>Data Entry</h3>
+
+<p>Fast and Accurate Data Entry.</p>
+
+</div>
+
+<div class="card">
+
+<h3>Typing</h3>
+
+<p>English and Bengali Typing.</p>
+
+</div>
+
+<div class="card">
+
+<h3>MS Office</h3>
+
+<p>Word, Excel and PowerPoint.</p>
+
+</div>
+
+</section>
+
+<section id="projects">
+
+<h2>Projects</h2>
+
+<div class="card">
+
+<h3>Suman AI</h3>
+
+<p>My Personal AI Assistant Project.</p>
+
+</div>
+
+<div class="card">
+
+<h3>Suman Official</h3>
+
+<p>Personal Portfolio Website.</p>
+
+</div>
+
+</section>
+
+<section id="contact">
+
+<h2>Contact Me</h2>
+
+<p>📧 Email : Your Email</p>
+
+<p>📱 Phone : Your Mobile</p>
+
+<a class="btn">
+Hire Me
+</a>
+
+</section>
+
+<footer>
+
+<p>
+
+© 2026 Suman Official
+
+All Rights Reserved.
+
+</p>
+
+</footer>
+
+<script src="script.js"></script>
+
+</body>
+</html>
