@@ -241,3 +241,25 @@ footer{
         max-width: 90%;
     }
 }
+/* Voice Button */
+
+#voiceBtn {
+    width: 48px;
+    padding: 10px;
+    border: none;
+    border-radius: 10px;
+    background: #ffffff;
+    color: #111827;
+    font-size: 20px;
+    cursor: pointer;
+    transition: 0.25s;
+}
+
+#voiceBtn:hover {
+    transform: translateY(-2px);
+}
+
+#voiceBtn:disabled {
+    opacity: 0.5;
+    cursor: not-allowed;
+}
