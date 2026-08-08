@@ -476,3 +476,26 @@ console.log(
 console.log(
     "Suman AI is ready!"
 );
+// ==========================================
+// SUMAN AI - VOICE OUTPUT
+// ==========================================
+
+function speakAI(text) {
+
+    if (!("speechSynthesis" in window)) {
+        console.log("Voice output is not supported.");
+        return;
+    }
+
+    // Remove any unwanted HTML
+    const cleanText = text.replace(/<[^>]*>/g, "");
+
+    const speech = new SpeechSynthesisUtterance(cleanText);
+
+    speech.lang = "en-IN";
+    speech.rate = 0.95;
+    speech.pitch = 1;
+
+    window.speechSynthesis.cancel();
+    window.speechSynthesis.speak(speech);
+}
