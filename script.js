@@ -323,7 +323,7 @@ async function sendMessage() {
             answer,
             "ai"
         );
-
+speakAI(answer);
 
     } catch (error) {
 
