@@ -393,7 +393,76 @@ if (userInput) {
     );
 
 }
+// ==========================================
+// SUMAN AI - VOICE INPUT
+// ==========================================
 
+const voiceBtn =
+    document.getElementById("voiceBtn");
+
+const SpeechRecognition =
+    window.SpeechRecognition ||
+    window.webkitSpeechRecognition;
+
+if (voiceBtn && SpeechRecognition) {
+
+    const recognition =
+        new SpeechRecognition();
+
+    recognition.lang = "en-IN";
+    recognition.continuous = false;
+    recognition.interimResults = false;
+
+
+    voiceBtn.addEventListener(
+        "click",
+        function () {
+
+            recognition.start();
+
+            voiceBtn.textContent = "🔴";
+
+        }
+    );
+
+
+    recognition.onresult =
+        function (event) {
+
+            const text =
+                event.results[0][0].transcript;
+
+            if (userInput) {
+                userInput.value = text;
+            }
+
+            voiceBtn.textContent = "🎤";
+
+        };
+
+
+    recognition.onerror =
+        function () {
+
+            voiceBtn.textContent = "🎤";
+
+        };
+
+
+    recognition.onend =
+        function () {
+
+            voiceBtn.textContent = "🎤";
+
+        };
+
+} else if (voiceBtn) {
+
+    voiceBtn.disabled = true;
+
+    voiceBtn.textContent = "❌";
+
+}
 
 
 // ==========================================
