@@ -499,3 +499,52 @@ function speakAI(text) {
     window.speechSynthesis.cancel();
     window.speechSynthesis.speak(speech);
 }
+// ==========================================
+// STOP AI VOICE
+// ==========================================
+
+const stopVoiceBtn =
+    document.getElementById("stopVoiceBtn");
+
+if (stopVoiceBtn) {
+    stopVoiceBtn.addEventListener("click", function () {
+
+        if ("speechSynthesis" in window) {
+            window.speechSynthesis.cancel();
+        }
+
+    });
+}
+
+
+// ==========================================
+// CLEAR CHAT
+// ==========================================
+
+const clearChatBtn =
+    document.getElementById("clearChatBtn");
+
+if (clearChatBtn) {
+
+    clearChatBtn.addEventListener("click", function () {
+
+        if (!chatBox) return;
+
+        chatBox.innerHTML = `
+            <div class="ai-message">
+                <strong>Suman AI:</strong>
+                Hello! 👋 I'm Suman AI.
+                How can I help you?
+            </div>
+        `;
+
+        if (userInput) {
+            userInput.value = "";
+        }
+
+        if ("speechSynthesis" in window) {
+            window.speechSynthesis.cancel();
+        }
+
+    });
+}
