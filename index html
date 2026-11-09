@@ -130,31 +130,38 @@ web development and AI.
 
 <section id="contact">
 
-<h2>Contact Me</h2>
+    <h2 class="section-title">Contact Me</h2>
 
-<p>📧 Email : Your Email</p>
+    <div class="contact-box">
 
-<p>📱 Phone : Your Mobile</p>
+        <p>📧 Email</p>
 
-<a class="btn">
-Hire Me
-</a>
+        <a href="mailto:ssamanta2490@gmail.com">
+            ssamanta2490@gmail.com
+        </a>
+
+        <p>📞 Mobile</p>
+
+        <a href="tel:+917586902463">
+            +91 7586902463
+        </a>
+
+        <div class="contact-buttons">
+
+            <a class="contact-btn"
+               href="mailto:ssamanta2490@gmail.com">
+                📧 Email Me
+            </a>
+
+            <a class="contact-btn"
+               href="tel:+917586902463">
+                📞 Call Me
+            </a>
+
+        </div>
+
+    </div>
 
 </section>
 
-<footer>
 
-<p>
-
-© 2026 Suman Official
-
-All Rights Reserved.
-
-</p>
-
-</footer>
-
-<script src="script.js"></script>
-
-</body>
-</html>
