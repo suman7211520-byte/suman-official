@@ -1,7 +1,5 @@
-
 export default async function handler(req, res) {
 
-    // Only POST requests
     if (req.method !== "POST") {
         return res.status(405).json({
             error: "Method not allowed"
@@ -18,57 +16,66 @@ export default async function handler(req, res) {
             });
         }
 
-        // Check API Key
         const apiKey = process.env.OPENROUTER_API_KEY;
 
         if (!apiKey) {
-            console.error("OPENROUTER_API_KEY is missing");
-
             return res.status(500).json({
                 error: "API key is not configured in Vercel."
             });
         }
 
-        // OpenRouter API
+        // Previous conversation history
+        const history = Array.isArray(req.body?.history)
+            ? req.body.history
+            : [];
+
+        // Accept only valid user and AI messages
+        const safeHistory = history
+            .filter(item =>
+                item &&
+                ["user", "ai"].includes(item.type) &&
+                typeof item.message === "string" &&
+                item.message.trim()
+            )
+            .slice(-12)
+            .map(item => ({
+                role: item.type === "user" ? "user" : "assistant",
+                content: item.message.trim().slice(0, 4000)
+            }));
+
+        const messages = [
+            {
+                role: "system",
+                content:
+                    "You are Suman AI, a helpful personal AI assistant created by Suman Samanta. Reply politely and clearly. Reply in Bengali when the user writes Bengali, and English when the user writes English. Use previous conversation messages to understand context."
+            },
+            ...safeHistory,
+            {
+                role: "user",
+                content: message
+            }
+        ];
+
         const response = await fetch(
             "https://openrouter.ai/api/v1/chat/completions",
             {
                 method: "POST",
-
                 headers: {
                     "Authorization": `Bearer ${apiKey}`,
                     "Content-Type": "application/json",
                     "X-Title": "Suman Official"
                 },
-
                 body: JSON.stringify({
-
                     model: "openrouter/free",
-
-                    messages: [
-                        {
-                            role: "system",
-                            content:
-                                "You are Suman AI, a helpful personal AI assistant created by Suman Samanta. Reply politely and clearly. Reply in Bengali when the user writes Bengali, and English when the user writes English."
-                        },
-                        {
-                            role: "user",
-                            content: message
-                        }
-                    ]
+                    messages: messages
                 })
             }
         );
 
         const data = await response.json();
 
-        // API Error
         if (!response.ok) {
-
-            console.error(
-                "OpenRouter Error:",
-                data
-            );
+            console.error("OpenRouter Error:", data);
 
             return res.status(502).json({
                 error:
@@ -92,13 +99,10 @@ export default async function handler(req, res) {
 
     } catch (error) {
 
-        console.error(
-            "Suman AI Server Error:",
-            error
-        );
+        console.error("Suman AI Server Error:", error);
 
         return res.status(500).json({
-            error: "Server error: " + error.message
+            error: "Server error."
         });
     }
 }
