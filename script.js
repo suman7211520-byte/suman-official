@@ -1,8 +1,11 @@
 /* ==========================================
    SUMAN OFFICIAL - MAIN SCRIPT
+   Chat History + Multiple Conversations
 ========================================== */
 
+// ==========================================
 // TYPING ANIMATION
+// ==========================================
 
 const words = [
     "Future AI Developer",
@@ -23,7 +26,9 @@ function typeEffect() {
     const currentWord = words[wordIndex];
 
     if (!deleting) {
-        typingElement.textContent = currentWord.substring(0, charIndex + 1);
+        typingElement.textContent =
+            currentWord.substring(0, charIndex + 1);
+
         charIndex++;
 
         if (charIndex === currentWord.length) {
@@ -32,7 +37,9 @@ function typeEffect() {
             return;
         }
     } else {
-        typingElement.textContent = currentWord.substring(0, charIndex - 1);
+        typingElement.textContent =
+            currentWord.substring(0, charIndex - 1);
+
         charIndex--;
 
         if (charIndex === 0) {
@@ -47,7 +54,9 @@ function typeEffect() {
 typeEffect();
 
 
+// ==========================================
 // DARK / LIGHT MODE
+// ==========================================
 
 const darkModeBtn = document.getElementById("darkModeBtn");
 
@@ -67,13 +76,19 @@ if (darkModeBtn) {
         const isLight =
             document.body.classList.contains("light-mode");
 
-        localStorage.setItem("sumanTheme", isLight ? "light" : "dark");
+        localStorage.setItem(
+            "sumanTheme",
+            isLight ? "light" : "dark"
+        );
+
         darkModeBtn.textContent = isLight ? "🌙" : "☀️";
     });
 }
 
 
+// ==========================================
 // SUMAN AI ELEMENTS
+// ==========================================
 
 const chatBox = document.getElementById("chatBox");
 const userInput = document.getElementById("userInput");
@@ -83,58 +98,189 @@ const voiceBtn = document.getElementById("voiceBtn");
 const stopVoiceBtn = document.getElementById("stopVoiceBtn");
 const clearChatBtn = document.getElementById("clearChatBtn");
 
-const STORAGE_KEY = "sumanAIChatHistory";
+const newChatBtn = document.getElementById("newChatBtn");
+const toggleHistoryBtn = document.getElementById("toggleHistoryBtn");
+const historyPanel = document.getElementById("historyPanel");
+const chatHistoryList = document.getElementById("chatHistoryList");
+const activeChatTitle = document.getElementById("activeChatTitle");
 
-const welcomeMessage = {
-    type: "ai",
-    message: "Hello! 👋 I'm Suman AI. How can I help you?"
-};
+const STORAGE_KEY = "sumanAIConversationsV2";
+
+const welcomeMessage =
+    "Hello! 👋 I'm Suman AI. How can I help you?";
 
 
-// LOAD SAVED HISTORY
+// ==========================================
+// CREATE CHAT ID
+// ==========================================
 
-let chatHistory = [];
-
-try {
-    const savedChat = localStorage.getItem(STORAGE_KEY);
-
-    if (savedChat) {
-        const parsedChat = JSON.parse(savedChat);
-
-        if (Array.isArray(parsedChat)) {
-            chatHistory = parsedChat.filter(item =>
-                item &&
-                ["user", "ai"].includes(item.type) &&
-                typeof item.message === "string"
-            );
-        }
-    }
-} catch (error) {
-    console.error("Chat history error:", error);
-}
-
-if (chatHistory.length === 0) {
-    chatHistory = [welcomeMessage];
+function createChatId() {
+    return Date.now().toString() +
+        Math.random().toString(36).slice(2, 8);
 }
 
 
-// SAVE HISTORY
+// ==========================================
+// LOAD SAVED CONVERSATIONS
+// ==========================================
 
-function saveChatHistory() {
+let conversations = [];
+let activeChatId = null;
+
+function saveAllChats() {
     try {
         localStorage.setItem(
             STORAGE_KEY,
-            JSON.stringify(chatHistory)
+            JSON.stringify({
+                conversations: conversations,
+                activeChatId: activeChatId
+            })
         );
     } catch (error) {
-        console.error("Could not save chat:", error);
+        console.error("Could not save conversations:", error);
+    }
+}
+
+function loadAllChats() {
+    try {
+        const saved = localStorage.getItem(STORAGE_KEY);
+
+        if (saved) {
+            const data = JSON.parse(saved);
+
+            if (Array.isArray(data.conversations)) {
+                conversations = data.conversations.filter(chat =>
+                    chat &&
+                    typeof chat.id === "string" &&
+                    Array.isArray(chat.messages)
+                );
+
+                activeChatId = data.activeChatId || null;
+            }
+        }
+    } catch (error) {
+        console.error("Chat loading error:", error);
+        conversations = [];
+    }
+
+    // Migrate the previous single-chat history if present
+    if (conversations.length === 0) {
+        try {
+            const oldSaved = localStorage.getItem("sumanAIChatHistory");
+
+            if (oldSaved) {
+                const oldMessages = JSON.parse(oldSaved);
+
+                if (Array.isArray(oldMessages)) {
+                    const migratedMessages = oldMessages
+                        .filter(item =>
+                            item &&
+                            ["user", "ai"].includes(item.type) &&
+                            typeof item.message === "string"
+                        )
+                        .filter(item =>
+                            item.message !== welcomeMessage
+                        );
+
+                    if (migratedMessages.length > 0) {
+                        const oldChat = {
+                            id: createChatId(),
+                            title: "Previous Chat",
+                            messages: migratedMessages,
+                            updatedAt: Date.now()
+                        };
+
+                        conversations.push(oldChat);
+                        activeChatId = oldChat.id;
+                    }
+                }
+            }
+        } catch (error) {
+            console.error("Old chat migration error:", error);
+        }
+    }
+
+    // Start a blank chat if there is no saved conversation
+    if (!getActiveChat()) {
+        createNewChat(false);
+    }
+
+    saveAllChats();
+}
+
+function getActiveChat() {
+    return conversations.find(
+        chat => chat.id === activeChatId
+    );
+}
+
+
+// ==========================================
+// CREATE NEW CHAT
+// ==========================================
+
+function createNewChat(save = true) {
+    const newChat = {
+        id: createChatId(),
+        title: "New Chat",
+        messages: [],
+        updatedAt: Date.now()
+    };
+
+    conversations.unshift(newChat);
+    activeChatId = newChat.id;
+
+    if (save) {
+        saveAllChats();
+    }
+
+    renderCurrentChat();
+    renderChatHistory();
+
+    if (userInput) {
+        userInput.value = "";
+        userInput.focus();
+    }
+
+    if (historyPanel) {
+        historyPanel.hidden = true;
     }
 }
 
 
-// DISPLAY MESSAGE
+// ==========================================
+// RENDER CURRENT CHAT
+// ==========================================
 
-function addMessage(message, type, save = true) {
+function renderCurrentChat() {
+    if (!chatBox) return;
+
+    const chat = getActiveChat();
+
+    chatBox.innerHTML = "";
+
+    if (!chat || chat.messages.length === 0) {
+        addMessageToScreen(welcomeMessage, "ai");
+    } else {
+        chat.messages.forEach(item => {
+            addMessageToScreen(item.message, item.type);
+        });
+    }
+
+    if (activeChatTitle) {
+        activeChatTitle.textContent =
+            chat && chat.title ? chat.title : "New Chat";
+    }
+
+    chatBox.scrollTop = chatBox.scrollHeight;
+}
+
+
+// ==========================================
+// DISPLAY ONE MESSAGE
+// ==========================================
+
+function addMessageToScreen(message, type) {
     if (!chatBox) return;
 
     const div = document.createElement("div");
@@ -151,38 +297,167 @@ function addMessage(message, type, save = true) {
     div.appendChild(document.createTextNode(message));
 
     chatBox.appendChild(div);
-    chatBox.scrollTop = chatBox.scrollHeight;
+}
 
-    if (save) {
-        chatHistory.push({
-            type: type,
-            message: message
+
+// ==========================================
+// ADD AND SAVE MESSAGE
+// ==========================================
+
+function addMessage(message, type) {
+    const chat = getActiveChat();
+
+    if (!chat) return;
+
+    chat.messages.push({
+        type: type,
+        message: message
+    });
+
+    // Keep up to 100 messages in each chat
+    chat.messages = chat.messages.slice(-100);
+
+    chat.updatedAt = Date.now();
+
+    // Set chat title from the first user message
+    if (type === "user" && chat.title === "New Chat") {
+        chat.title = message.slice(0, 35);
+
+        if (message.length > 35) {
+            chat.title += "...";
+        }
+    }
+
+    saveAllChats();
+    renderCurrentChat();
+    renderChatHistory();
+}
+
+
+// ==========================================
+// CHAT HISTORY LIST
+// ==========================================
+
+function renderChatHistory() {
+    if (!chatHistoryList) return;
+
+    chatHistoryList.innerHTML = "";
+
+    const sortedChats = [...conversations].sort(
+        (a, b) => b.updatedAt - a.updatedAt
+    );
+
+    if (sortedChats.length === 0) {
+        const empty = document.createElement("p");
+        empty.className = "history-empty";
+        empty.textContent = "No previous chats yet.";
+        chatHistoryList.appendChild(empty);
+        return;
+    }
+
+    sortedChats.forEach(chat => {
+        const item = document.createElement("div");
+        item.className = "history-item";
+
+        const openButton = document.createElement("button");
+        openButton.type = "button";
+        openButton.className = "history-open";
+        openButton.textContent = chat.title || "New Chat";
+        openButton.title = chat.title || "New Chat";
+
+        if (chat.id === activeChatId) {
+            openButton.style.border = "2px solid var(--accent)";
+        }
+
+        openButton.addEventListener("click", function () {
+            openChat(chat.id);
         });
 
-        // Keep the latest 50 messages locally
-        chatHistory = chatHistory.slice(-50);
+        const deleteButton = document.createElement("button");
+        deleteButton.type = "button";
+        deleteButton.className = "history-delete";
+        deleteButton.textContent = "🗑️";
+        deleteButton.title = "Delete this chat";
 
-        saveChatHistory();
+        deleteButton.addEventListener("click", function () {
+            deleteChat(chat.id);
+        });
+
+        item.appendChild(openButton);
+        item.appendChild(deleteButton);
+
+        chatHistoryList.appendChild(item);
+    });
+}
+
+
+// ==========================================
+// OPEN OLD CHAT
+// ==========================================
+
+function openChat(id) {
+    const chat = conversations.find(item => item.id === id);
+
+    if (!chat) return;
+
+    activeChatId = id;
+
+    saveAllChats();
+    renderCurrentChat();
+    renderChatHistory();
+
+    if (historyPanel) {
+        historyPanel.hidden = true;
     }
 }
 
 
-// RESTORE HISTORY
+// ==========================================
+// DELETE ONE CHAT
+// ==========================================
 
-function loadChatHistory() {
-    if (!chatBox) return;
+function deleteChat(id) {
+    const chat = conversations.find(item => item.id === id);
 
-    chatBox.innerHTML = "";
+    if (!chat) return;
 
-    chatHistory.forEach(function (item) {
-        addMessage(item.message, item.type, false);
-    });
+    const confirmed = confirm(
+        "Delete this conversation?"
+    );
+
+    if (!confirmed) return;
+
+    conversations = conversations.filter(
+        item => item.id !== id
+    );
+
+    if (activeChatId === id) {
+        if (conversations.length > 0) {
+            activeChatId = conversations[0].id;
+        } else {
+            activeChatId = null;
+            createNewChat(false);
+        }
+    }
+
+    saveAllChats();
+    renderCurrentChat();
+    renderChatHistory();
 }
 
-loadChatHistory();
+
+// ==========================================
+// INITIAL LOAD
+// ==========================================
+
+loadAllChats();
+renderCurrentChat();
+renderChatHistory();
 
 
+// ==========================================
 // VOICE OUTPUT
+// ==========================================
 
 function speakAI(text) {
     if (!("speechSynthesis" in window)) return;
@@ -203,7 +478,9 @@ function speakAI(text) {
 }
 
 
-// SEND MESSAGE WITH CONVERSATION MEMORY
+// ==========================================
+// SEND MESSAGE WITH MEMORY
+// ==========================================
 
 let isSending = false;
 
@@ -214,8 +491,12 @@ async function sendMessage() {
 
     if (!message) return;
 
-    // Capture previous messages BEFORE adding the new message
-    const previousHistory = chatHistory
+    const chat = getActiveChat();
+
+    if (!chat) return;
+
+    // Send previous messages to the API
+    const previousHistory = chat.messages
         .slice(-12)
         .map(item => ({
             type: item.type,
@@ -254,7 +535,9 @@ async function sendMessage() {
         const data = await response.json();
 
         if (!response.ok) {
-            throw new Error(data.error || "AI request failed");
+            throw new Error(
+                data.error || "AI request failed"
+            );
         }
 
         const answer = data.answer;
@@ -284,19 +567,23 @@ async function sendMessage() {
 
         if (sendBtn) sendBtn.disabled = false;
 
-        userInput.focus();
+        if (userInput) userInput.focus();
     }
 }
 
 
+// ==========================================
 // SEND BUTTON
+// ==========================================
 
 if (sendBtn) {
     sendBtn.addEventListener("click", sendMessage);
 }
 
 
+// ==========================================
 // ENTER KEY
+// ==========================================
 
 if (userInput) {
     userInput.addEventListener("keydown", function (event) {
@@ -308,7 +595,70 @@ if (userInput) {
 }
 
 
+// ==========================================
+// NEW CHAT BUTTON
+// ==========================================
+
+if (newChatBtn) {
+    newChatBtn.addEventListener("click", function () {
+        createNewChat(true);
+    });
+}
+
+
+// ==========================================
+// TOGGLE CHAT HISTORY
+// ==========================================
+
+if (toggleHistoryBtn && historyPanel) {
+    toggleHistoryBtn.addEventListener("click", function () {
+        historyPanel.hidden = !historyPanel.hidden;
+
+        if (!historyPanel.hidden) {
+            renderChatHistory();
+        }
+    });
+}
+
+
+// ==========================================
+// CLEAR CURRENT CHAT
+// ==========================================
+
+if (clearChatBtn) {
+    clearChatBtn.addEventListener("click", function () {
+        const chat = getActiveChat();
+
+        if (!chat) return;
+
+        const confirmed = confirm(
+            "Clear all messages in this chat?"
+        );
+
+        if (!confirmed) return;
+
+        if ("speechSynthesis" in window) {
+            window.speechSynthesis.cancel();
+        }
+
+        chat.messages = [];
+        chat.title = "New Chat";
+        chat.updatedAt = Date.now();
+
+        saveAllChats();
+        renderCurrentChat();
+        renderChatHistory();
+
+        if (userInput) {
+            userInput.value = "";
+        }
+    });
+}
+
+
+// ==========================================
 // VOICE INPUT
+// ==========================================
 
 const SpeechRecognition =
     window.SpeechRecognition ||
@@ -354,7 +704,9 @@ if (voiceBtn && SpeechRecognition) {
 }
 
 
+// ==========================================
 // STOP AI VOICE
+// ==========================================
 
 if (stopVoiceBtn) {
     stopVoiceBtn.addEventListener("click", function () {
@@ -365,29 +717,10 @@ if (stopVoiceBtn) {
 }
 
 
-// CLEAR CHAT HISTORY
-
-if (clearChatBtn) {
-    clearChatBtn.addEventListener("click", function () {
-        if (!chatBox) return;
-
-        if ("speechSynthesis" in window) {
-            window.speechSynthesis.cancel();
-        }
-
-        chatHistory = [welcomeMessage];
-
-        saveChatHistory();
-        loadChatHistory();
-
-        if (userInput) {
-            userInput.value = "";
-        }
-    });
-}
-
-
+// ==========================================
 // CONSOLE
+// ==========================================
 
 console.log("Suman Official loaded successfully!");
-console.log("Suman AI Conversation Memory enabled!");
+console.log("Suman AI Multiple Chat History enabled!");
+           
