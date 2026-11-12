@@ -1,26 +1,18 @@
-+91 7586902463
 <!DOCTYPE html>
 <html lang="en">
-
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-
-    <meta name="description"
-        content="Suman Samanta - Freelancer providing Data Entry, Data Cleaning, Excel, PDF to Excel, Typing and document formatting services.">
-
+    <meta name="description" content="Suman Samanta - Student and aspiring freelancer learning Data Entry, Data Cleaning, Excel, PDF conversion and AI development.">
     <meta name="author" content="Suman Samanta">
-
     <meta name="theme-color" content="#0f172a">
 
-    <title>Suman Official | Data Entry & Data Cleaning Freelancer</title>
-
+    <title>Suman Official | Suman Samanta</title>
     <link rel="stylesheet" href="style.css">
 </head>
 
 <body>
 
-<!-- HEADER -->
 <header>
     <div class="logo">Suman Official</div>
 
@@ -33,22 +25,16 @@
         <a href="#contact">Contact</a>
     </nav>
 
-    <button id="darkModeBtn" class="mode-btn" type="button">
-        🌙
-    </button>
+    <button id="darkModeBtn" class="mode-btn" type="button">🌙</button>
 </header>
 
-
-<!-- HOME -->
 <section id="home" class="hero">
-
     <p class="welcome">WELCOME TO SUMAN OFFICIAL</p>
-
     <h1>Hello, I'm Suman Samanta</h1>
 
     <h2>
         Professional
-        <span id="typing">Data Entry Specialist</span>
+        <span id="typing">Future AI Developer</span>
     </h2>
 
     <p>
@@ -57,19 +43,13 @@
     </p>
 
     <a href="#services" class="btn">Explore My Services</a>
-
     <a href="#contact" class="btn">Contact Me</a>
-
 </section>
 
-
-<!-- ABOUT -->
 <section id="about">
-
     <h2 class="section-title">About Me</h2>
 
     <div class="about-box">
-
         <p>
             Hello! I am <strong>Suman Samanta</strong>.
             I am a student and aspiring freelancer
@@ -86,20 +66,12 @@
             My goal is to deliver organized,
             accurate and reliable digital work.
         </p>
-
     </div>
-
 </section>
 
-
-<!-- SERVICES -->
 <section id="services">
-
     <h2 class="section-title">My Services</h2>
-
-    <p class="ai-intro">
-        Digital services I am learning and offering.
-    </p>
+    <p class="ai-intro">Digital services I am learning and offering.</p>
 
     <div class="services-container">
 
@@ -152,103 +124,78 @@
         </div>
 
     </div>
-
 </section>
 
-
-<!-- PORTFOLIO -->
 <section id="projects">
-
     <h2 class="section-title">My Portfolio</h2>
-
-    <p class="ai-intro">
-        Practice projects and examples of my work.
-    </p>
+    <p class="ai-intro">Practice projects and examples of my work.</p>
 
     <div class="services-container">
 
         <div class="service-card">
             <div class="icon">📊</div>
             <h3>Excel Data Entry</h3>
-            <p>
-                A practice spreadsheet showing
-                structured data entry.
-            </p>
+            <p>A practice spreadsheet showing structured data entry.</p>
         </div>
 
         <div class="service-card">
             <div class="icon">🧹</div>
             <h3>Data Cleaning Sample</h3>
-            <p>
-                A practice example of organizing
-                and cleaning spreadsheet data.
-            </p>
+            <p>A practice example of organizing and cleaning spreadsheet data.</p>
         </div>
 
         <div class="service-card">
             <div class="icon">📄</div>
             <h3>Document Formatting</h3>
-            <p>
-                A practice example of a clean,
-                well-formatted document.
-            </p>
+            <p>A practice example of a clean, well-formatted document.</p>
         </div>
 
     </div>
-
 </section>
 
-
-<!-- FIVERR -->
 <section id="fiverr">
-
     <h2 class="section-title">Work With Me</h2>
 
     <div class="about-box">
-
         <h3>Find Me on Fiverr</h3>
-
         <p>
             Visit my Fiverr profile to connect
             and learn more about my freelance work.
         </p>
 
-        <a
-            class="btn"
-            href="https://www.fiverr.com/suman_excel2600"
-            target="_blank"
-            rel="noopener noreferrer">
+        <a class="btn"
+           href="https://www.fiverr.com/suman_excel2600"
+           target="_blank"
+           rel="noopener noreferrer">
             Visit My Fiverr Profile
         </a>
-
     </div>
-
 </section>
-
 
 <!-- SUMAN AI -->
 <section id="suman-ai">
-
     <h2 class="section-title">🤖 Suman AI</h2>
-
-    <p class="ai-intro">
-        Your personal AI assistant.
-    </p>
+    <p class="ai-intro">Your personal AI assistant.</p>
 
     <div class="ai-box">
 
-        <div id="chatBox" class="chat-box">
-
-            <div class="ai-message">
-                <strong>Suman AI:</strong>
-                Hello! 👋 I'm Suman AI.
-                How can I help you?
-            </div>
-
+        <div class="ai-toolbar">
+            <button id="newChatBtn" type="button">＋ New Chat</button>
+            <button id="toggleHistoryBtn" type="button">📚 Chat History</button>
         </div>
 
-        <div class="chat-input">
+        <div id="historyPanel" class="history-panel" hidden>
+            <h3>Previous Chats</h3>
+            <div id="chatHistoryList"></div>
+        </div>
 
+        <div class="chat-heading">
+            <strong id="activeChatTitle">New Chat</strong>
+        </div>
+
+        <div id="chatBox" class="chat-box"></div>
+
+        <div class="chat-input">
             <input
                 type="text"
                 id="userInput"
@@ -256,74 +203,46 @@
                 autocomplete="off">
 
             <button id="sendBtn" type="button">Send</button>
-
-            <button id="voiceBtn" type="button">🎤</button>
-
-            <button id="stopVoiceBtn" type="button">🔇</button>
-
-            <button id="clearChatBtn" type="button">🗑️</button>
-
+            <button id="voiceBtn" type="button" title="Voice input">🎤</button>
+            <button id="stopVoiceBtn" type="button" title="Stop voice">🔇</button>
+            <button id="clearChatBtn" type="button" title="Clear current chat">🗑️</button>
         </div>
 
     </div>
-
 </section>
 
-
-<!-- CONTACT -->
 <section id="contact">
-
     <h2 class="section-title">Contact Me</h2>
 
     <div class="contact-box">
-
         <p>📧 Email</p>
-
         <a href="mailto:ssamanta2490@gmail.com">
             ssamanta2490@gmail.com
         </a>
 
         <p>📞 Mobile</p>
-
         <a href="tel:+917586902463">
             +91 7586902463
         </a>
 
         <div class="contact-buttons">
-
-            <a
-                class="contact-btn"
-                href="mailto:ssamanta2490@gmail.com">
+            <a class="contact-btn" href="mailto:ssamanta2490@gmail.com">
                 📧 Email Me
             </a>
 
-            <a
-                class="contact-btn"
-                href="tel:+917586902463">
+            <a class="contact-btn" href="tel:+917586902463">
                 📞 Call Me
             </a>
-
         </div>
-
     </div>
-
 </section>
 
-
-<!-- FOOTER -->
 <footer>
-
     <p>© 2026 Suman Official. All Rights Reserved.</p>
-
     <p>Made by Suman Samanta</p>
-
     <a href="#home">Back to Top ↑</a>
-
 </footer>
 
-
-<!-- JAVASCRIPT -->
 <script src="script.js"></script>
-
 </body>
 </html>
