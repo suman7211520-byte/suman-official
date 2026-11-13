@@ -603,3 +603,16 @@ body.light-mode .history-open {
         align-items: stretch;
     }
    }
+.logo img {
+    width: 180px;
+    height: 65px;
+    object-fit: contain;
+    display: block;
+}
+
+@media (max-width: 768px) {
+    .logo img {
+        width: 130px;
+        height: 50px;
+    }
+}
