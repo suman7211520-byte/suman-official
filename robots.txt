@@ -1,1 +1,6 @@
 
+User-agent: *
+Allow: /
+
+Sitemap: https://suman-official-lsmr.vercel.app/sitemap.xml
+
